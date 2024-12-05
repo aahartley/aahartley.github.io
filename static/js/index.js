@@ -1,12 +1,12 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
-var INTERP_BASE = "./static/interpolation/stacked";
-var NUM_INTERP_FRAMES = 240;
+var INTERP_BASE = "./static/interpolation/cat_res64_perlin3";
+var NUM_INTERP_FRAMES = 11;
 
 var interp_images = [];
 function preloadInterpolationImages() {
   for (var i = 0; i < NUM_INTERP_FRAMES; i++) {
-    var path = INTERP_BASE + '/' + String(i).padStart(6, '0') + '.jpg';
+    var path = INTERP_BASE + '/' + 'perlin_img00000_step'+String(i*25) + '.png';
     interp_images[i] = new Image();
     interp_images[i].src = path;
   }
