@@ -1,1 +1,475 @@
-test
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Analysis of Noise in Diffusion Models for Image Synthesis.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analysis of Noise in Diffusion Models for Image Synthesis</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Analysis of Noise in Diffusion Models for Image Synthesis</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Austin Hartley</span>
+      
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">CPSC 8810-ML-based Image Synthesis,</span>
+            <span class="author-block">Clemson University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span> -->
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/teaser.png"
+             class="interpolation-image"
+             alt="Interpolate start reference image."/>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Teaser:</span> 
+        In conventional diffusion-based generative modeling, data is corrupted by adding Gaussian (random) noise (top row). 
+        We explore the alternative approach of using correlated Gaussian noise. 
+        Different correlation can be used such as blue noise (second row) or a time-varying correlations (third row). 
+        Bottom row shows the corresponding noise mask for time-varying example at different time steps. 
+        Rightmost two columns show visual comparisons on generated images (from the same initial noise) between Heitz et al. [2023] (using only Gaussian
+        noise) and Ours (using time-varying noise). Our generated images are more natural-looking and detailed with less artifacts.
+      </h2>
+    </div>
+    <!-- <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/church30k_res64_iadb_gwn2gbn_steps250_teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        An example of our "time-varying" denoising process on Church (64x64).
+      </h2>
+    </div> -->
+  </div>
+</section>
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/steve.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/chair-tp.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/shiba.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/fullbody.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/mask.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/coffee.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/toby2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Most of the existing diffusion models use Gaussian noise for training and sampling across all time steps, which may not optimally
+            account for the frequency contents reconstructed by the denoising network.
+            Despite the diverse applications of correlated noise in computer graphics, its potential for improving the training process has been underexplored. 
+            In this paper, we introduce a novel and general class of diffusion models taking correlated noise within and across images into account. 
+            More specifically, we propose a time-varying noise model to incorporate correlated noise into the training process, as well as a method for fast generation of correlated noise mask. 
+            Our model is built upon deterministic diffusion models and utilizes blue noise to help improve the generation quality compared to using Gaussian white (random) noise only. 
+            Further, our framework allows introducing correlation across images within a single mini-batch to improve gradient flow. 
+            We perform both qualitative and quantitative evaluations on a variety of datasets using our method, achieving improvements on different tasks over existing deterministic diffusion models in terms of FID metric.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="Algorithms">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">What is blue noise</h2>
+        <div class="content has-text-justified">
+          <p>
+            Blue noise refers to a distribution with no energy in the low-frequency region in its power spectrum. 
+            We propose to use time-varying noise based on the time steps, by blending Gaussian (white) noise with Gaussian blue noise smoothly from left to right, as shown below.
+          </p>
+          <img src="./static/images/noise.png"
+             class="interpolation-image"
+             alt="Interpolate start reference image."/>
+        </div>
+       
+
+      </div>
+        
+
+    </div>
+  </div>
+</section>
+
+
+<br/>
+
+
+<section class="Algorithms">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Why blue noise</h2>
+        <div class="content has-text-justified">
+          <p>
+            Using Gaussian blue noise for denoising diffusion process better preserves fine details and the integrity of the content,
+            while noise magnitude is below 100%.
+          </p>
+          <img src="./static/images/why_blue_noise.png"
+             class="interpolation-image"
+             alt="Interpolate start reference image."/>
+        </div>
+       
+
+      </div>
+        
+
+    </div>
+  </div>
+</section>
+
+
+<br/>
+
+<section class="Algorithms">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Our method</h2>
+
+
+        <div class="content has-text-justified">
+          <p>
+            First, we need to generate Gaussian blue noise on the fly.
+            We propose a fast method to generate Gaussian blue noise masks by using a precomputed matrix (L) from blue noise that are generated offline.
+            To get higher-dimensional Gaussian blue noise masks, we tile different realizations of 64x64 masks.
+          </p>
+        </div>
+
+        <div class="columns is-centered has-text-centered">
+          <div class="column">  
+            <div class="content">
+              <img src="./static/images/noise_gen.png"
+                class="interpolation-image"
+                alt="Interpolate start reference image."/>
+            </div>
+          </div>
+        </div>
+        
+
+
+        <div class="content has-text-justified">
+          <p>
+            Then, we propose a novel and general diffusion model using time-varying noise. 
+            More specifically, we propose to use Gaussian blue noise by interpolating Gaussian noise and Gaussian blue noise across time steps to improve the training of diffusion models.
+          </p>
+        </div>
+
+    
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h3 class="title is-3 has-text-centered">Results</h3>
+    <div class="content has-text-justified">
+      <p>
+        In addition to the results in the main paper, we show here the videos of generated image sequences using DDIM, IADB and Ours trained on different datasets.
+      </p>
+    </div>
+    <h2 class="subtitle has-text-centered">
+      &darr; Comparisons of generated image sequences trained on Cat (64x64) 
+    </h2>
+    <div class="columns is-centered has-text-centered">
+
+    </div>
+
+
+
+    <h2 class="subtitle has-text-centered">
+      &darr; Comparisons of generated image sequences trained on Church (64x64) 
+    </h2>
+    <div class="columns is-centered has-text-centered">
+     
+    </div>
+   
+
+
+
+    
+  
+
+   
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+    <!-- ################################################################################ -->
+
+
+
+
+
+
+
+    <!-- Animation. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <br/>
+        <h2 class="title is-3">Interactive visualization of intermediate steps</h2>
+        <br/>
+        <!-- Interpolating. -->
+        <!-- <h3 class="title is-4">Interpolating states</h3> -->
+        <!-- <div class="content has-text-justified">
+          <p>
+            We also see the blue noise effect of Ours around the right end of the noisy images.
+          </p>
+        </div> -->
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Blue noise effect visible on Ours from the middle time steps (Cat 64x64) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_perlin3/perlin_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper3">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_perlin3/perlin_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Ours)</p>
+          </div>
+        </div>
+
+        
+        
+
+
+        </br>
+
+        
+
+        
+
+
+
+
+       
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This webpage template is from <a
+              href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>. We sincerely thank the authors for developing and open-sourcing this template.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
