@@ -32,7 +32,7 @@
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/favicon.svg">
+  <link rel="icon" href="./static/images/favicon.ico">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -103,7 +103,7 @@
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
+                <a href="./static/8810_paper.pdf"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -123,7 +123,7 @@
               </span> -->
               <!-- Dataset Link. -->
               <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                <a href="https://github.com/xchhuang/bndm"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="far fa-images"></i>
@@ -142,17 +142,14 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="./static/images/teaser.png"
+      <img src="./static/images/noise.png"
              class="interpolation-image"
              alt="Interpolate start reference image."/>
       <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Teaser:</span> 
-        In conventional diffusion-based generative modeling, data is corrupted by adding Gaussian (random) noise (top row). 
-        We explore the alternative approach of using correlated Gaussian noise. 
-        Different correlation can be used such as blue noise (second row) or a time-varying correlations (third row). 
-        Bottom row shows the corresponding noise mask for time-varying example at different time steps. 
-        Rightmost two columns show visual comparisons on generated images (from the same initial noise) between Heitz et al. [2023] (using only Gaussian
-        noise) and Ours (using time-varying noise). Our generated images are more natural-looking and detailed with less artifacts.
+        <span class="dnerf">Diffuson Model:</span> 
+        The diffusion model used is the time-varying noise model from the paper <a
+        href="https://github.com/nerfies/nerfies.github.io">"Blue noise for diffusion models"</a> by Huang et al. This model starts off at pure uncorrelated Gaussian white noise and slowly
+        blends into a chosen noise over time through linear interpolation.
       </h2>
     </div>
     <!-- <div class="hero-body">
@@ -232,14 +229,11 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Most of the existing diffusion models use Gaussian noise for training and sampling across all time steps, which may not optimally
-            account for the frequency contents reconstructed by the denoising network.
-            Despite the diverse applications of correlated noise in computer graphics, its potential for improving the training process has been underexplored. 
-            In this paper, we introduce a novel and general class of diffusion models taking correlated noise within and across images into account. 
-            More specifically, we propose a time-varying noise model to incorporate correlated noise into the training process, as well as a method for fast generation of correlated noise mask. 
-            Our model is built upon deterministic diffusion models and utilizes blue noise to help improve the generation quality compared to using Gaussian white (random) noise only. 
-            Further, our framework allows introducing correlation across images within a single mini-batch to improve gradient flow. 
-            We perform both qualitative and quantitative evaluations on a variety of datasets using our method, achieving improvements on different tasks over existing deterministic diffusion models in terms of FID metric.
+            In the field of image synthesis, diffusion models have been proven to create high-quality images. 
+            This created a surge of research attempting to improve the training process.
+            Most of these new studies have solely used uncorrelated Gaussian white noise at all points in training, leaving the effects of correlated noise under-researched. 
+            This paper analyzes the state-of-the-art time-varying diffusion model's use of blue noise and expands upon their research to add more insights to the relationship 
+            between the denoising process of diffusion models and the type of noise used on image results.
           </p>
         </div>
       </div>
@@ -251,15 +245,14 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">What is blue noise</h2>
+        <h2 class="title is-3">The Backward Process</h2>
         <div class="content has-text-justified">
           <p>
-            Blue noise refers to a distribution with no energy in the low-frequency region in its power spectrum. 
-            We propose to use time-varying noise based on the time steps, by blending Gaussian (white) noise with Gaussian blue noise smoothly from left to right, as shown below.
+            The backward process goes from low frequency (structure) to high frequency (finer details). The time-varying noise model proves that emphasizing the high frequency components
+            can increase image quality. In this paper, experiments are conducted to see how important emphasizing the low frequency components at the beginning is in terms of image quality and
+            if types of noise can be leveraged in other ways to produce certain stylistic attributes, such as more unique cat fur patterns.
           </p>
-          <img src="./static/images/noise.png"
-             class="interpolation-image"
-             alt="Interpolate start reference image."/>
+
         </div>
        
 
@@ -278,15 +271,15 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Why blue noise</h2>
+        <h2 class="title is-3">Experiments</h2>
         <div class="content has-text-justified">
           <p>
-            Using Gaussian blue noise for denoising diffusion process better preserves fine details and the integrity of the content,
-            while noise magnitude is below 100%.
+            The experiments to test the importance of emphasizing the low frequencies at the start used red to white for a duration and then switched to white to blue.
+            This was done at 20% to 80%, 50% to 50%, and 80% to 20%. To further add to that evidence, a blend of red and blue was then blended with white noise, where red noise was
+            emphasized more heavily in the beginning and blue noise in the end, once with a linear blend and once with a quadraitc blend. Tests were also done using perlin noise with the 
+            same structure as the white to blue.
           </p>
-          <img src="./static/images/why_blue_noise.png"
-             class="interpolation-image"
-             alt="Interpolate start reference image."/>
+ 
         </div>
        
 
@@ -304,35 +297,25 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Our method</h2>
+        <h2 class="title is-3">Results</h2>
 
 
         <div class="content has-text-justified">
           <p>
-            First, we need to generate Gaussian blue noise on the fly.
-            We propose a fast method to generate Gaussian blue noise masks by using a precomputed matrix (L) from blue noise that are generated offline.
-            To get higher-dimensional Gaussian blue noise masks, we tile different realizations of 64x64 masks.
+            The results showed that overly emphasizing the lower frequencies would lead to worse results, and a smaller emphasis for a smaller duration is better. However, those results
+            were still worse than the white to blue blend, due to the blending causing the training to become more difficult. This implies further tailoring of the blend and noise scheduler would be 
+            required to acheive better results than the white to blue blend. Blending noises together is also not a straightfoward process, as it can easily produce artifacts and worse results. There is also a case to be made that inserting specific types of noise in certain areas could allow for new stylistic
+            attributes.
           </p>
+          <img src="./static/images/loss_table.png"
+          class="interpolation-image"
+          alt="Interpolate start reference image."/> <br/><hr> <br/>
+          <img src="./static/images/loss_table_128.png"
+          class="interpolation-image"
+          alt="Interpolate start reference image."/>
         </div>
 
-        <div class="columns is-centered has-text-centered">
-          <div class="column">  
-            <div class="content">
-              <img src="./static/images/noise_gen.png"
-                class="interpolation-image"
-                alt="Interpolate start reference image."/>
-            </div>
-          </div>
-        </div>
-        
-
-
-        <div class="content has-text-justified">
-          <p>
-            Then, we propose a novel and general diffusion model using time-varying noise. 
-            More specifically, we propose to use Gaussian blue noise by interpolating Gaussian noise and Gaussian blue noise across time steps to improve the training of diffusion models.
-          </p>
-        </div>
+  
 
     
     </div>
@@ -342,45 +325,14 @@
 
 <section class="section">
   <div class="container is-max-desktop">
-    <h3 class="title is-3 has-text-centered">Results</h3>
+    <h3 class="title is-3 has-text-centered">Results- Images</h3>
     <div class="content has-text-justified">
       <p>
-        In addition to the results in the main paper, we show here the videos of generated image sequences using DDIM, IADB and Ours trained on different datasets.
+        The experiments of this paper are compared to the uncorrelated Gaussian white noise and the white to blue noise produced by the time-varying noise model.
       </p>
     </div>
-    <h2 class="subtitle has-text-centered">
-      &darr; Comparisons of generated image sequences trained on Cat (64x64) 
-    </h2>
-    <div class="columns is-centered has-text-centered">
-
-    </div>
-
-
-
-    <h2 class="subtitle has-text-centered">
-      &darr; Comparisons of generated image sequences trained on Church (64x64) 
-    </h2>
-    <div class="columns is-centered has-text-centered">
-     
-    </div>
    
-
-
-
-    
-  
-
    
-
-
-    
-
-
-
-
-
-
-
 
 
     
@@ -407,17 +359,17 @@
         </div> -->
 
         <h2 class="subtitle has-text-centered">
-          &darr; Blue noise effect visible on Ours from the middle time steps (Cat 64x64) 
+          &darr; Uncorrelated Gaussian White Noise (Cat 64x64) 
         </h2>
         <div class="columns is-vcentered interpolation-panel">
           <div class="column is-3 has-text-centered">
-            <img src="./static/interpolation/cat_res64_perlin3/perlin_img00000_step0.png"
+            <img src="./static/interpolation/cat_res64_gwn/gwn_img00000_step0.png"
                  class="interpolation-image"
                  alt="Interpolate start reference image."/>
             <p>Init noise</p>
           </div>
           <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper3">
+            <div id="interpolation-image-wrapper">
               Loading...
             </div>
             <input class="slider is-fullwidth is-large is-info"
@@ -425,10 +377,10 @@
                    step="1" min="0" max="100" value="0" type="range">
           </div>
           <div class="column is-3 has-text-centered">
-            <img src="./static/interpolation/cat_res64_perlin3/perlin_img00000_step250.png"
+            <img src="./static/interpolation/cat_res64_gwn/gwn_img00000_step250.png"
                  class="interpolation-image"
                  alt="Interpolation end reference image."/>
-            <p class="is-bold">Generated image (Ours)</p>
+            <p class="is-bold">Generated image (Theirs)</p>
           </div>
         </div>
 
@@ -438,9 +390,354 @@
 
         </br>
 
-        
+        <h2 class="subtitle has-text-centered">
+          &darr; Gaussian Blue Noise (Cat 64x64) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_gwn2gbn/gwn2gbn_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper2">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider2"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_gwn2gbn/gwn2gbn_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Theirs)</p>
+          </div>
+        </div>
 
-        
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Red to Blue (50-50) (Cat 64x64) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_rtob_5050/RtoB_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper3">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider3"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_rtob_5050/RtoB_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Red and Blue (Quadratic) (Cat 64x64) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_randb_quad/RandBWhite_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper4">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider4"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_randb_quad/RandBWhite_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Perlin Noise (Cat 64x64) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_perlin3/perlin_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper5">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider5"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_perlin3/perlin_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Perlin Noise (Cat 64x64) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_perlin6/perlin_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper6">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider6"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res64_perlin6/perlin_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Uncorrelated Gaussian White Noise (Cat 128x128) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_gwn/gwn_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper7">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider7"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_gwn/gwn_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Theirs)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Gaussian Blue Noise (Cat 128x128) 
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_gwn2gbn/gwn2gbn_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper8">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider8"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_gwn2gbn/gwn2gbn_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Theirs)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Red to Blue (20-80) (Cat 128x128)
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_rtob_2080/RtoB_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper9">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider9"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_rtob_2080/RtoB_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Red to Blue (50-50) (Cat 128x128)
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_rtob_5050/RtoB_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper10">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider10"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_rtob_5050/RtoB_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Red and Blue (Linear) (Cat 128x128)
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_randb_linear/RandB_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper11">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider11"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_randb_linear/RandB_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+
+        <h2 class="subtitle has-text-centered">
+          &darr; Red and Blue (Quadratic) (Cat 128x128)
+        </h2>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_randb_quad/RandBWhite_img00000_step0.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Init noise</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper12">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider12"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/interpolation/cat_res128_randb_quad/RandBWhite_img00000_step250.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Generated image (Mine)</p>
+          </div>
+        </div>
+
+
+
+        </br>
+
+
+
+
+
+
 
 
 
