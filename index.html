@@ -105,7 +105,7 @@
 									<li>C++ Volumetric Rendering using DSMs(Ray Marching)</li>
 									<li>Wedge Creation with noise(Wisps, Pyroclastic displacements, Implicit Fields)</li>
 									<li>Convert geometry into level sets, CSG operations</li>
-									<li>Eulerian Fluid Simulations using characteristic maps (Dr. Jerry Tessendorf)</li>
+									<li>Eulerian Fluid Simulations using characteristic maps based on Dr. Jerry Tessendorf's paper</li>
 								</ul>
 								<ul class="icons">
 									<li>Github link: <a href="https://github.com/aahartley/8190.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
@@ -115,54 +115,90 @@
 						<section class="spotlight">
 							<div class="image">
 								<video autoplay loop muted playsinline>
-								  <source src="videos/flocking.mp4" type="video/mp4">
+								  <source src="videos/particles.mp4" type="video/mp4">
 								  Your browser does not support the video tag.
 								</video>
 							</div>
 							<div class="content">
 								<h2>Physically-based Animatin (PBA)</h2>
 								<ul>
-									<li>Flocking Plugin based on Craig Reynold's 1987 Boids paper</li>
-									<li>DFSPH Plugin (In-Progress)</li>
+									<li>C++ PBA Application</li>
+									<li>Forces, Geometry Collisions (accounting for exact time hit), Integration Solvers</li>
+									<li>Particles, SPH, WIP: Rigid/Soft Bodies, Flocking</li>
+									<li>Rendered using OpenGL</li>
 								</ul>
 								<ul class="icons">
-									<li>Github link: <a href="https://github.com/aahartley/HDK_Plugins.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
+									<li>Github link: <a href="https://github.com/aahartley/6190.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
 								</ul> 
 							</div>
 						</section>
 						<section class="spotlight">
 							<div class="image">
-								<iframe 
-								src="https://www.youtube.com/watch?v=ujFFh10w77g">
-								</iframe>
+								<iframe width="560" height="315" src="https://www.youtube.com/embed/ujFFh10w77g?si=2cr_JJ4TgfGEfPFB" 
+								title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 							</div>
 							<div class="content">
 								<h2>2D Physics Engine</h2>
 								<ul>
-									<li>Flocking Plugin based on Craig Reynold's 1987 Boids paper</li>
-									<li>DFSPH Plugin (In-Progress)</li>
+									<li>C++ 2D Rigid Bodies Physics Engine</li>
+									<li>AABB and Separating Axis Theorem for collisions</li>
+									<li>Solves for angular velocity, impulse, and momentum</li>
+									<li>Particle effects (shape morphing, fireworks, emitters)</li>
+									<li>Cloth simulations</li>
 								</ul>
 								<ul class="icons">
-									<li>Github link: <a href="https://github.com/aahartley/HDK_Plugins.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
+									<li>Github link: <a href="https://github.com/aahartley/PhysicsEngine.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
 								</ul> 
 							</div>
 						</section>
 						<section class="spotlight">
 							<div class="image">
 								<video autoplay loop muted playsinline>
-								  <source src="videos/flocking.mp4" type="video/mp4">
+								  <source src="videos/image.mp4" type="video/mp4">
 								  Your browser does not support the video tag.
 								</video>
 							</div>
 							<div class="content">
 								<h2>Image Processing</h2>
 								<ul>
-									<li>Flocking Plugin based on Craig Reynold's 1987 Boids paper</li>
-									<li>DFSPH Plugin (In-Progress)</li>
+									<li>C++ Image Processing Application using OpenImageIO</li>
+									<li>Pixel adjustments (brightness, gamma, bias, compliment, grayscale, quantize, linenar convolution)</li>
+									<li>Statistics (histogram equalization, contrast units)</li>
+									<li>Fractal Viewing</li>
 								</ul>
 								<ul class="icons">
-									<li>Github link: <a href="https://github.com/aahartley/HDK_Plugins.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
+									<li>Github link: <a href="https://github.com/aahartley/6040_CGImages.git" class="icon brands fa-github"><span class="label">Github</span></a></li>
 								</ul> 
+							</div>
+						</section>
+						<section class="spotlight">
+							<div class="image">
+								<video autoplay loop muted playsinline>
+								  <source src="videos/game.mp4" type="video/mp4">
+								  Your browser does not support the video tag.
+								</video>
+							</div>
+							<div class="content">
+								<h2>Python Game (Exiled Legends)</h2>
+								<ul>
+									<li>2.5D Python isometric game using Pygame (CPU based effects)</li>
+									<li>Sprite animations, particle effects, isometric tiles, asset utility</li>
+								</ul>
+								<ul class="icons">
+									<li>Github link: <a href="https://github.com/aahartley/6160/tree/main/final" class="icon brands fa-github"><span class="label">Github</span></a></li>
+								</ul> 
+							</div>
+						</section>
+						<section class="spotlight">
+							<div class="image"><img src="images/noise.jpg" alt="" /></div><div class="content">
+							<div class="content">
+								<h2>Deep Learning - Image Synthesis & Computational Photography</h2>
+								<ul>
+									<li>Research on types of noise for a time-varying diffusion model: https://aahartley.github.io/Noise4DiffusionModels/</li>
+									<li>Depth Map Prediction based on Eigens paper: (WIP)</li>
+						
+								</ul>
+					
 							</div>
 						</section>
 

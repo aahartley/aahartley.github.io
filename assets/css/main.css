@@ -2687,7 +2687,6 @@ input, select, textarea {
 			.spotlight .image video {
 				width: 100%;
 				border-radius: 0;
-				display: block;
 			}
 			.spotlight .image iframe {
 				width: 100%;
